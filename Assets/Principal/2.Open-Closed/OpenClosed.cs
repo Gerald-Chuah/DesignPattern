@@ -5,16 +5,6 @@ using System;
 using System.Linq.Expressions;
 
 
-// to get variable name
-public static class MemberInfoGetting
-{
-	public static string GetMemberName<T>(Expression<Func<T>> memberExpression)
-	{
-		MemberExpression expressionBody = (MemberExpression)memberExpression.Body;
-		return expressionBody.Member.Name;
-	}
-}
-
 public enum Color
 {
 	Red,Green,Blue
@@ -35,7 +25,7 @@ public class Product
 	{
 		if (name == null)
 		{
-			throw new ArgumentNullException (paramName: MemberInfoGetting.GetMemberName(()=>name));
+			throw new ArgumentNullException (paramName: Extension.MemberInfoGetting.GetMemberName(()=>name));
 			//throw new ArgumentNullException (paramName: nameof(name); =>After C# 6.0
 
 		}
@@ -127,12 +117,12 @@ public class AndSpecification<T>: ISpecification<T>
 	{	
 		if(first == null)
 		{
-			throw new ArgumentNullException(paramName: MemberInfoGetting.GetMemberName(()=>first));
+			throw new ArgumentNullException(paramName: Extension.MemberInfoGetting.GetMemberName(()=>first));
 		}
 
 		if(second == null)
 		{
-			throw new ArgumentNullException(paramName: MemberInfoGetting.GetMemberName(()=>second));
+			throw new ArgumentNullException(paramName: Extension.MemberInfoGetting.GetMemberName(()=>second));
 		}
 
 		this.first = first;
