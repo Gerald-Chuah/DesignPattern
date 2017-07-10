@@ -45,6 +45,8 @@ public class Product
 		m_size = size;
 	}
 }
+	
+
 
 public class ProductFilter
 {
@@ -76,9 +78,93 @@ public class ProductFilter
 
 }
 
+public interface ISpecification<T>
+{
+	bool IsSatisfied(T t);
+}
+
+public interface IFilter<T>
+{
+	IEnumerable<T> Filter(IEnumerable<T> items, ISpecification<T> spec);
+}
+
+public class ColorSpecification : ISpecification<Product>
+{
+	private Color color;
+
+	public ColorSpecification (Color color)
+	{
+		this.color = color;
+	}
+
+	public bool IsSatisfied(Product p)
+	{
+		return p.m_color == color;
+	}
+}
+
+public class SizeSpecification : ISpecification<Product>
+{
+	private Size size;
+
+	public SizeSpecification (Size size)
+	{
+		this.size = size;
+	}
+
+	public bool IsSatisfied(Product p)
+	{
+		return p.m_size == size;
+	}
+}
+
+//Combinator
+public class AndSpecification<T>: ISpecification<T>
+{
+	private ISpecification<T> first, second;
+
+	public AndSpecification (ISpecification<T> first,ISpecification<T> second)
+	{	
+		if(first == null)
+		{
+			throw new ArgumentNullException(paramName: MemberInfoGetting.GetMemberName(()=>first));
+		}
+
+		if(second == null)
+		{
+			throw new ArgumentNullException(paramName: MemberInfoGetting.GetMemberName(()=>second));
+		}
+
+		this.first = first;
+		this.second =second;
+
+		//C# 7.0 can write in this way
+		//this.first = first ?? throw new ArgumentNullException(paramName: nameof(first));
+	}
+
+	public bool IsSatisfied(T t)
+	{
+		return first.IsSatisfied(t) && second.IsSatisfied(t);
+	}
+}
+
+public class BetterFilter: IFilter<Product>
+{
+	public IEnumerable<Product> Filter(IEnumerable<Product> items, ISpecification<Product> spec)
+	{
+		foreach (var i in items)
+		{
+			if (spec.IsSatisfied(i))
+			{
+				yield return i;
+			}
+		}
+	}
+}
+
+
 public class OpenClosed : MonoBehaviour 
 {
-	
 
 	void Start () 
 	{
@@ -95,6 +181,24 @@ public class OpenClosed : MonoBehaviour
 		foreach (var p in pf.FilterByColor(products,Color.Red))
 		{
 			string text = string.Format("{0} is red color.",p.m_name);
+			Debug.Log(text);
+		}
+
+		Debug.Log("New Method");
+		var bf = new BetterFilter();
+
+		foreach (var p in bf.Filter(products,new ColorSpecification(Color.Red)))
+		{
+			string text = string.Format("{0} is red color.",p.m_name);
+			Debug.Log(text);
+		}
+
+		foreach (var p in bf.Filter(products,
+				new AndSpecification<Product>( 
+				new ColorSpecification(Color.Red),
+				new SizeSpecification(Size.Small))))
+		{
+			string text = string.Format("{0} is red color and small.",p.m_name);
 			Debug.Log(text);
 		}
 
