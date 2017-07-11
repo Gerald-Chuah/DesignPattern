@@ -1,4 +1,5 @@
 ﻿using System;
+using ExtensionTool;
 
 public class InterfaceSegregation 
 {
@@ -121,11 +122,11 @@ public class InterfaceSegregation
 		{
 			if (printer == null)
 			{
-				throw new ArgumentNullException(paramName: Extension.MemberInfoGetting.GetMemberName(()=>printer));
+				throw new ArgumentNullException(paramName: MemberInfoGetting.GetMemberName(()=>printer));
 			}
 			if (scanner == null)
 			{
-				throw new ArgumentNullException(paramName: Extension.MemberInfoGetting.GetMemberName(()=>scanner));
+				throw new ArgumentNullException(paramName: MemberInfoGetting.GetMemberName(()=>scanner));
 			}
 			this.printer = printer;
 			this.scanner = scanner;

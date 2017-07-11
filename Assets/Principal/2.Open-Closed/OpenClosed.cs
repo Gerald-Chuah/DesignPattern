@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq.Expressions;
+using ExtensionTool;
 
 
 public enum Color
@@ -25,7 +26,7 @@ public class Product
 	{
 		if (name == null)
 		{
-			throw new ArgumentNullException (paramName: Extension.MemberInfoGetting.GetMemberName(()=>name));
+			throw new ArgumentNullException (paramName: MemberInfoGetting.GetMemberName(()=>name));
 			//throw new ArgumentNullException (paramName: nameof(name); =>After C# 6.0
 
 		}
@@ -117,12 +118,12 @@ public class AndSpecification<T>: ISpecification<T>
 	{	
 		if(first == null)
 		{
-			throw new ArgumentNullException(paramName: Extension.MemberInfoGetting.GetMemberName(()=>first));
+			throw new ArgumentNullException(paramName: MemberInfoGetting.GetMemberName(()=>first));
 		}
 
 		if(second == null)
 		{
-			throw new ArgumentNullException(paramName: Extension.MemberInfoGetting.GetMemberName(()=>second));
+			throw new ArgumentNullException(paramName: MemberInfoGetting.GetMemberName(()=>second));
 		}
 
 		this.first = first;
